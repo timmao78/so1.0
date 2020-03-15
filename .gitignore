@@ -3,3 +3,4 @@ csv/
 requirement.txt
 txt/
 venv/
+__pycache__

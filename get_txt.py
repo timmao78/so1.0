@@ -5,6 +5,7 @@ import datetime
 import pytz
 import time
 import re
+import os
 
 # --------------------------------------------------------------------
 #                          Main Function
@@ -74,7 +75,9 @@ if __name__ == "__main__":
 
         now_shanghai = datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai'))
         file_name = f"./txt/{now_shanghai.strftime('%Y-%m-%d')}.txt"
-        print(file_name)
+        if not os.path.exists(file_name):
+            with open(file_name, 'w') as f:
+                pass
 
         for url in url_list:
             paragraph = scrape_web(url)

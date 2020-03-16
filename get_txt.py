@@ -1,4 +1,4 @@
-#! /Library/Frameworks/Python.framework/Versions/3.7/bin/python3
+#! /Users/tianranmao/Projects/so1.0/venv/bin/python
 import requests
 from bs4 import BeautifulSoup
 import datetime

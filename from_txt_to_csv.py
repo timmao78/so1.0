@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
+#! /Users/tianranmao/Projects/so1.0/venv/bin/python
 
 # In[1]:
 
@@ -253,7 +252,17 @@ def from_txt_to_csv(UNDL=None, EXP=None, STK=None, r=0.0275, sigma=0.2):
                                         option_price = (df_options[key].loc[i,'P']*df_options[key].loc[i,'np'] +float(e[1]))/(df_options[key].loc[i,'np']+1)
                                         df_options[key].loc[i,'P'] = round(option_price,4)
                                         df_options[key].loc[i,'np'] += 1
+                                        
+            for underlying in df_underlyings:
+                underlying_write = df_underlyings[underlying].replace(0, np.nan)
+                underlying_write.set_index('time', inplace=True)
+                underlying_write.to_csv(f'{csv_dir}/{underlying}.csv')
 
+            for option in df_options:
+                option_write = df_options[option].replace(0, np.nan)
+                option_write.set_index('time', inplace=True)
+                option_write.to_csv(f'{csv_dir}/{option}.csv')
+                
             last_size = os.stat(source_txt).st_size  
 
 

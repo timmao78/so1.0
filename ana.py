@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#! /Users/tianranmao/Projects/so1.0/venv/bin/python
 
 import cmd
 import os

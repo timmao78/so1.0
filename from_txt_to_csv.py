@@ -62,7 +62,7 @@ def get_stk(CODE):
 
     strike_list = [strike]
 
-    for i in range(2):
+    for i in range(3):
         if strike < 3000:
             strike = strike + 50
             strike_list.append(strike)
@@ -72,7 +72,7 @@ def get_stk(CODE):
 
     strike = strike_list[0]
 
-    for i in range(2):
+    for i in range(3):
         if strike <= 3000:
             strike = strike - 50
             strike_list.append(strike)

@@ -15,39 +15,45 @@ if __name__ == '__main__':
 
     pattern_trade = re.compile(r'^(BUY|SELL)\s+(\w+)\s+@\s+([.\d]+)\s+x\s+([\d]+)')
 
+    PROF = {}
     BUY = {}
     SELL = {}
-    PROF = {}
+    COMBS = []
 
     with open(LOG_FILE, 'r') as rf:
         for line in rf:
-            match_trade = re.search(pattern_trade, line)
-            op = match_trade.group(1)
-            code = match_trade.group(2)
-            price = float(match_trade.group(3))
-            volume = int(match_trade.group(4))
-            if op == 'BUY':
-                BUY.update({code:[price, volume, 'done']})
-            elif op =='SELL':
-                SELL.update({code:[price, volume, 'done']})
-
-    for code in BUY:
-        if code not in SELL:
-            if code[6] == 'C':
-                SELL.update({code: [0, BUY[code][1], 'to be']})
+            if line.split() == []:
+                COMBS.append((BUY, SELL))
+                BUY = {}
+                SELL = {}
             else:
-                SELL.update({code: [0, BUY[code][1], 'to be']})
+                match_trade = re.search(pattern_trade, line)
+                op = match_trade.group(1)
+                code = match_trade.group(2)
+                price = float(match_trade.group(3))
+                volume = int(match_trade.group(4))
+                if op == 'BUY':
+                    BUY.update({code:[price, volume, 'done']})
+                elif op =='SELL':
+                    SELL.update({code:[price, volume, 'done']})
+        COMBS.append((BUY, SELL))
 
-    for code in SELL:
-        if code not in BUY:
-            if code[6] == 'C':
-                BUY.update({code: [0, SELL[code][1], 'to be']})
-            else:
-                BUY.update({code: [0, SELL[code][1], 'to be']})
+    for BUY, SELL in COMBS:
+        for code in BUY:
+            if code not in SELL:
+                if code[6] == 'C':
+                    SELL.update({code: [0, BUY[code][1], 'to be']})
+                else:
+                    SELL.update({code: [0, BUY[code][1], 'to be']})
 
-    while True:
-        time.sleep(5)
+        for code in SELL:
+            if code not in BUY:
+                if code[6] == 'C':
+                    BUY.update({code: [0, SELL[code][1], 'to be']})
+                else:
+                    BUY.update({code: [0, SELL[code][1], 'to be']})
 
+    def track(BUY, SELL):
         for code in BUY:
             if BUY[code][2] == 'to be':
                 op_type = code[6]
@@ -109,4 +115,10 @@ if __name__ == '__main__':
             print(f'{round(SELL[k][0] - BUY[k][0],4): >20}', end='')
         print(f'{round(tt,4): >20}')
         print()
+
+    while True:
+        time.sleep(5)
+        for BUY, SELL in COMBS:
+            track(BUY, SELL)
+            print()
 
